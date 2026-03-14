@@ -165,12 +165,12 @@ Y_it = β (NPI_i × Post_t)
 
 Where:
 
-Y_it     = outcome (log employment or log TFP)
-NPI_i    = NPI intensity measure
-Post_t   = indicator for years after the pandemic (year ≥ 1919)
-X_i      = pre-pandemic city characteristics
-α_i      = city fixed effects
-γ_t      = year fixed effects
+- Y_it     = outcome (log employment or log TFP)
+- NPI_i    = NPI intensity measure
+- Post_t   = indicator for years after the pandemic (year ≥ 1919)
+- X_i      = pre-pandemic city characteristics
+- α_i      = city fixed effects
+- γ_t      = year fixed effects
 
 Standard errors are clustered at the city level.
 
@@ -178,8 +178,8 @@ Standard errors are clustered at the city level.
 
 ## Author
 
-Yi Liu
-Department of Economics
+Yi Liu, 
+Department of Economics, 
 Yale University
 
 ---
