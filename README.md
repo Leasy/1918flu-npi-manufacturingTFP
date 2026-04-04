@@ -15,15 +15,18 @@ The project examines how non-pharmaceutical interventions (NPIs) implemented dur
 .
 ├── data/
 │   ├── city.dta
-│   └── city-manufacturing.dta
+│   ├── city-manufacturing.dta
+│   └── CM_tfp_1904_1919_with_cityid.dta
 │
 ├── main.R
+├── industry_TFP.R
 │
 └── README.md
 ```
 
 - data/ contains the datasets used in the analysis.
-- main.R is the main replication script that reproduces all empirical results.
+- main.R is the main replication script for the baseline city-level analysis.
+- industry.R implements the grouped-industry event-study analysis of NPI effects on manufacturing TFP.
 - README.md describes the repository and replication instructions.
 
 ---
@@ -56,6 +59,17 @@ Key variables include:
 - manuf_valadd
 - manuf_wages
 
+### 3. CM_tfp_1904_1919_with_cityid.dta
+City-year-industry manufacturing data used for the grouped-industry TFP event-study analysis.
+
+Key variables used in the script include:
+- city_id
+- year
+- industry_name
+- emp_ops_tot
+- cap_tot
+- val_add
+
 ---
 
 ## Replication Instructions
@@ -72,12 +86,16 @@ To reproduce all results:
 
 source("main.R")
 
+To reproduce the grouped-industry TFP event-study analysis:
+
+source("industry_TFP.R")
+
 The script will:
 
 - load the datasets from data/
 - construct outcome variables
 - estimate all regressions
-- generate tables and figures used in the paper
+- generate tables and figures used in the paper as well as extra results not used in the paper. 
 
 All results will be saved automatically in the output directory created by the script.
 
@@ -153,7 +171,7 @@ of a one standard deviation increase in the corresponding NPI measure.
 
 ---
 
-## Empirical Specification
+## Baseline Empirical Specification
 
 The baseline empirical model is:
 
@@ -175,6 +193,74 @@ Where:
 Standard errors are clustered at the city level.
 
 ---
+
+## Grouped-Industry TFP Event-Study Analysis
+
+In addition to the baseline city-level analysis, this repository includes a grouped-industry event-study script that examines how NPI exposure is associated with manufacturing TFP across broad industry groups.
+
+### Main steps
+
+The grouped-industry script:
+
+- cleans detailed industry names  
+- classifies industries into broad groups using a stable mapping approach  
+- aggregates the data to the `city × year × industry_group` level  
+- reconstructs grouped manufacturing TFP  
+- runs event-study regressions separately for each industry group  
+- saves regression results and figures automatically  
+
+---
+
+### Industry groups
+
+Detailed industries are collapsed into the following broad groups:
+
+- Food  
+- Consumer goods  
+- Printing  
+- Chemicals  
+- Construction  
+- Machinery  
+- Other  
+
+---
+
+### Event-study specification
+
+For each industry group and each NPI measure, the script estimates an event-study specification of the form:
+
+log_tfp_ctj = Σ_{τ ≠ 1914} β_τj (1{year = τ} × NPI_c) + α_cj + γ_tj + ε_ctj
+
+- `c` indexes cities  
+- `t` indexes years  
+- `j` indexes industry groups  
+- `1914` is the omitted reference year  
+- city and year fixed effects are included  
+- standard errors are clustered at the city level  
+
+The grouped-industry analysis keeps the years:
+
+- 1904  
+- 1909  
+- 1914  
+- 1919  
+
+---
+
+### Output files
+
+The grouped-industry script saves output to:
+
+results_grouped_industry_tfp_eventstudy/
+
+This includes:
+
+- industry-group mapping files  
+- sample count summaries  
+- event-study coefficient tables by NPI measure and year  
+- combined result files  
+- horizontal coefficient plots in `.png` format  
+
 
 ## Author
 
